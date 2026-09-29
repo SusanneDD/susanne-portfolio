@@ -94,11 +94,11 @@ export default function App() {
           <div className="profile-card">
             <div className="profile-photo">
               <img
-                src="/profile-photo.jpg"
+                src="/profile-new.jpg"
                 alt="Susanne Dahesh profilbild"
                 style={{
                   mixBlendMode: "normal",
-                  transform: "translateY(-14%) scale(1.28)",
+                  transform: "translateY(-5%) scale(0.9)",
                 }}
               />
             </div>
