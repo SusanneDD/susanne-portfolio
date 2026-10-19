@@ -1,3 +1,5 @@
+import { CSSProperties, MouseEvent, useEffect, useState } from "react";
+
 const projects = [
   {
     name: "MovieProject",
@@ -7,6 +9,8 @@ const projects = [
     demo: "https://fe24-js1-slutprojekt-susanne-dahesh.netlify.app/#now-playing",
     url: "fe24-js1-slutprojekt.netlify.app",
     previewType: "movie",
+    rank: "S-RANK",
+    category: "API",
   },
   {
     name: "WeatherFinder",
@@ -16,6 +20,8 @@ const projects = [
     demo: "https://susannedd.github.io/fe24-js1-grit-Susanne-Dahesh/",
     url: "susannedd.github.io/weather",
     previewType: "weather",
+    rank: "A-RANK",
+    category: "API",
   },
   {
     name: "Message Board",
@@ -25,6 +31,8 @@ const projects = [
     demo: "https://clinquant-cocada-c9cf61.netlify.app/",
     url: "messageboard.netlify.app",
     previewType: "message",
+    rank: "A-RANK",
+    category: "Interaktion",
   },
 ];
 const skills = [
@@ -40,29 +48,147 @@ const skills = [
   "UI/UX",
   "Responsive Design",
 ];
+const terminalMessages = [
+  "Design system synkroniserat",
+  "Responsivitet kontrollerad",
+  "Ny frontendutmaning söks",
+];
+const navigationItems = [
+  { label: "Om mig", id: "about" },
+  { label: "Projekt", id: "projects" },
+  { label: "Erfarenhet", id: "experience" },
+  { label: "Kontakt", id: "contact" },
+];
+const projectFilters = ["Alla", "API", "Interaktion"];
+
 export default function App() {
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [isHudExpanded, setIsHudExpanded] = useState(false);
+  const [isPowerMode, setIsPowerMode] = useState(false);
+  const [terminalMessageIndex, setTerminalMessageIndex] = useState(0);
+  const [copyStatus, setCopyStatus] = useState<"idle" | "success" | "error">(
+    "idle",
+  );
+  const [activeSection, setActiveSection] = useState("top");
+  const [activeProjectFilter, setActiveProjectFilter] = useState("Alla");
+
+  useEffect(() => {
+    const updateScrollProgress = () => {
+      const scrollableHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(
+        scrollableHeight > 0 ? (window.scrollY / scrollableHeight) * 100 : 0,
+      );
+    };
+
+    updateScrollProgress();
+    window.addEventListener("scroll", updateScrollProgress, { passive: true });
+    return () => window.removeEventListener("scroll", updateScrollProgress);
+  }, []);
+
+  useEffect(() => {
+    const sectionElements = navigationItems
+      .map(({ id }) => document.getElementById(id))
+      .filter((section): section is HTMLElement => section !== null);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleSection = entries.find((entry) => entry.isIntersecting);
+        if (visibleSection) {
+          setActiveSection(visibleSection.target.id);
+        }
+      },
+      { rootMargin: "-35% 0px -55% 0px" },
+    );
+
+    sectionElements.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setTerminalMessageIndex(
+        (currentIndex) => (currentIndex + 1) % terminalMessages.length,
+      );
+    }, 2800);
+
+    return () => window.clearInterval(intervalId);
+  }, []);
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText("Susanne.Dahesh420@Hotmail.com");
+      setCopyStatus("success");
+    } catch {
+      setCopyStatus("error");
+    }
+  };
+  const handleCardMovement = (event: MouseEvent<HTMLElement>) => {
+    const card = event.currentTarget;
+    const bounds = card.getBoundingClientRect();
+    const x = (event.clientX - bounds.left) / bounds.width - 0.5;
+    const y = (event.clientY - bounds.top) / bounds.height - 0.5;
+    card.style.setProperty("--rotate-x", `${-y * 5}deg`);
+    card.style.setProperty("--rotate-y", `${x * 5}deg`);
+  };
+  const resetCardMovement = (event: MouseEvent<HTMLElement>) => {
+    event.currentTarget.style.setProperty("--rotate-x", "0deg");
+    event.currentTarget.style.setProperty("--rotate-y", "0deg");
+  };
+  const visibleProjects = projects.filter(
+    (project) =>
+      activeProjectFilter === "Alla" ||
+      project.category === activeProjectFilter,
+  );
+
   return (
-    <>
+    <div className={isPowerMode ? "app power-mode" : "app"}>
+      <div
+        className="scroll-progress"
+        style={{ transform: `scaleX(${scrollProgress / 100})` }}
+        aria-hidden="true"
+      />
       <header className="site-header">
         <a className="brand" href="#top">
           SD
         </a>
         <nav>
-          <a href="#about">Om mig</a>
-          <a href="#projects">Projekt</a>
-          <a href="#experience">Erfarenhet</a>
-          <a href="#contact">Kontakt</a>
+          {navigationItems.map((item) => (
+            <a
+              className={activeSection === item.id ? "is-active" : ""}
+              href={`#${item.id}`}
+              key={item.id}
+            >
+              {item.label}
+            </a>
+          ))}
         </nav>
+        <button
+          className="power-mode-button"
+          type="button"
+          onClick={() => setIsPowerMode((enabled) => !enabled)}
+          aria-pressed={isPowerMode}
+        >
+          <span aria-hidden="true">✦</span>
+          {isPowerMode ? "Normal mode" : "Power mode"}
+        </button>
       </header>
       <main id="top">
         <section className="hero section">
+          <div className="sakura-field" aria-hidden="true">
+            <span>✦</span>
+            <span>✦</span>
+            <span>✦</span>
+            <span>✦</span>
+            <span>✦</span>
+          </div>
           <div className="hero-copy">
             <p className="eyebrow">
+              <span className="status-dot" aria-hidden="true" />
               Examinerad frontendutvecklare · Helsingborg
             </p>
-            <h1>
-              Jag bygger moderna webbupplevelser som är tydliga, snabba och
-              användarvänliga.
+            <h1 className="hero-title">
+              Jag förvandlar idéer till snabba, intuitiva och genomtänkta{" "}
+              <span>webbupplevelser.</span>
             </h1>
             <p className="hero-text">
               Frontend Developer med fokus på React, TypeScript, JavaScript och
@@ -90,17 +216,61 @@ export default function App() {
               </a>
               <span>Helsingborg · B-körkort</span>
             </div>
+            <div className="hero-achievement">
+              <span className="achievement-icon" aria-hidden="true">
+                01
+              </span>
+              <span>
+                <strong>Quest unlocked:</strong> Redo för nästa
+                frontenduppdrag.
+              </span>
+            </div>
+            <div className="build-console" aria-live="polite">
+              <div className="console-topline">
+                <span>
+                  <i aria-hidden="true" /> LIVE BUILD CONSOLE
+                </span>
+                <span>v1.0</span>
+              </div>
+              <p>
+                <span className="console-prompt" aria-hidden="true">
+                  &gt;_
+                </span>
+                {terminalMessages[terminalMessageIndex]}
+              </p>
+            </div>
           </div>
           <div className="profile-card">
-            <div className="profile-photo">
+            <button
+              className={`profile-photo ${isHudExpanded ? "is-expanded" : ""}`}
+              type="button"
+              onClick={() => setIsHudExpanded((expanded) => !expanded)}
+              aria-expanded={isHudExpanded}
+              aria-label="Visa eller dölj utvecklarstatus"
+            >
               <img
                 src="/profile-new.jpg"
                 alt="Susanne Dahesh profilbild"
-                style={{
-                  mixBlendMode: "normal",
-                  transform: "translateY(-5%) scale(0.9)",
-                }}
               />
+              <span className="photo-frame photo-frame-one" aria-hidden="true" />
+              <span className="photo-frame photo-frame-two" aria-hidden="true" />
+              <span className="photo-label" aria-hidden="true">
+                SD_01
+              </span>
+            </button>
+            <div className={`developer-hud ${isHudExpanded ? "is-open" : ""}`}>
+              <div className="hud-heading">
+                <span>DEVELOPER STATUS</span>
+                <span>ONLINE</span>
+              </div>
+              <div className="hud-stat">
+                <span>React / TypeScript</span>
+                <strong>92%</strong>
+              </div>
+              <div className="hud-meter" aria-hidden="true">
+                <span />
+              </div>
+              <p className="hud-hint">Klicka på bilden för statusdata</p>
             </div>
             <p>Frontendutvecklare · Helsingborg</p>
           </div>
@@ -108,7 +278,7 @@ export default function App() {
         <section id="about" className="section split-section">
           <div>
             <p className="section-kicker">Om mig</p>
-            <h2>Teknik, design och ansvar i samma profil.</h2>
+            <h2>Teknik, design och leveransfokus i samma profil.</h2>
           </div>
           <div className="about-copy">
             <p>
@@ -127,17 +297,34 @@ export default function App() {
         </section>
         <section className="section skills-section">
           <p className="section-kicker">Teknisk kompetens</p>
+          <h2>En modern verktygslåda för digitala upplevelser.</h2>
           <div className="skills-grid">
             {skills.map((s) => (
               <span key={s}>{s}</span>
             ))}
+          </div>
+          <div className="skill-radar" aria-label="Styrkor inom frontendutveckling">
+            <div className="radar-copy">
+              <span className="section-kicker">Nuvarande fokus</span>
+              <h3>Bygger nästa nivå av digitala upplevelser.</h3>
+              <p>
+                Jag utvecklar mitt hantverk genom rena komponenter, genomtänkt
+                design och lösningar som fungerar för riktiga användare.
+              </p>
+            </div>
+            <div className="radar-chart" aria-hidden="true">
+              <span className="radar-core">UI/UX</span>
+              <span className="radar-node node-react">React</span>
+              <span className="radar-node node-code">Code</span>
+              <span className="radar-node node-api">API</span>
+            </div>
           </div>
         </section>
         <section id="projects" className="section">
           <div className="section-heading">
             <div>
               <p className="section-kicker">Utvalda projekt</p>
-              <h2>Projekt som visar hur jag arbetar.</h2>
+              <h2>Projekt som visar hur jag bygger för riktiga användare.</h2>
             </div>
             <a
               href="https://github.com/SusanneDD"
@@ -147,10 +334,37 @@ export default function App() {
               Se all kod på GitHub ↗
             </a>
           </div>
+          <div className="project-filters" aria-label="Filtrera projekt">
+            {projectFilters.map((filter) => (
+              <button
+                className={activeProjectFilter === filter ? "is-active" : ""}
+                type="button"
+                key={filter}
+                onClick={() => setActiveProjectFilter(filter)}
+                aria-pressed={activeProjectFilter === filter}
+              >
+                {filter === "Alla" ? "Alla projekt" : filter}
+              </button>
+            ))}
+          </div>
           <div className="projects-grid">
-            {projects.map((p, i) => (
-              <article className="project-card" key={p.name}>
+            {visibleProjects.map((p) => {
+              const i = projects.indexOf(p);
+              return (
+              <article
+                className="project-card"
+                key={p.name}
+                onMouseMove={handleCardMovement}
+                onMouseLeave={resetCardMovement}
+                style={
+                  {
+                    "--rotate-x": "0deg",
+                    "--rotate-y": "0deg",
+                  } as CSSProperties
+                }
+              >
                 <div className={`project-visual visual-${i + 1}`}>
+                  <span className="project-rank">{p.rank}</span>
                   <div className="browser-mockup">
                     <div className="browser-bar">
                       <div className="browser-dots">
@@ -307,14 +521,15 @@ export default function App() {
                   </div>
                 </div>
               </article>
-            ))}
+              );
+            })}
           </div>
         </section>
         <section id="experience" className="section experience-section">
           <div className="section-heading">
             <div>
               <p className="section-kicker">Erfarenhet</p>
-              <h2>Praktisk utvecklingserfarenhet + lång arbetslivsvana.</h2>
+              <h2>Redo att bidra från första sprinten.</h2>
             </div>
           </div>
           <div className="timeline">
@@ -356,15 +571,24 @@ export default function App() {
         </section>
         <section id="contact" className="section contact-section">
           <p className="section-kicker">Kontakt</p>
-          <h2>Jag söker min första fasta utvecklarroll.</h2>
+          <h2>Letar ni efter en frontendutvecklare som vill göra skillnad?</h2>
           <p>
             Jag är öppen för frontendroller där jag kan bidra från start och
             fortsätta utvecklas tillsammans med ett team.
           </p>
           <div className="contact-links">
-            <a href="mailto:Susanne.Dahesh420@Hotmail.com">
-              Susanne.Dahesh420@Hotmail.com
-            </a>
+            <div className="email-action">
+              <a href="mailto:Susanne.Dahesh420@Hotmail.com">
+                Susanne.Dahesh420@Hotmail.com
+              </a>
+              <button type="button" onClick={copyEmail}>
+                {copyStatus === "success"
+                  ? "Kopierat!"
+                  : copyStatus === "error"
+                    ? "Kunde inte kopiera"
+                    : "Kopiera e-post"}
+              </button>
+            </div>
             <a
               href="https://github.com/SusanneDD"
               target="_blank"
@@ -380,6 +604,6 @@ export default function App() {
         <span>© 2026 Susanne Dahesh</span>
         <a href="#top">Till toppen ↑</a>
       </footer>
-    </>
+    </div>
   );
 }

@@ -37,6 +37,12 @@ Vite visar sedan en lokal URL i terminalen, vanligtvis `http://localhost:5173`.
 | `npm run build` | Typsäkrar och bygger en produktionsversion i `dist/`. |
 | `npm run preview` | Förhandsvisar den byggda produktionsversionen lokalt. |
 
+## Publicering
+
+Portföljen publiceras automatiskt på GitHub Pages när ändringar pushas till
+`main`. Den publika sidan finns på
+[susannedd.github.io/susanne-portfolio](https://susannedd.github.io/susanne-portfolio/).
+
 ## Projektstruktur
 
 ```text
@@ -45,11 +51,10 @@ src/
 	main.tsx      React-applikationens startpunkt
 	styles.css    Layout, färger och responsiva stilar
 public/
-	profile-photo.jpg  Profilbild
+	profile-new.jpg    Profilbild
 ```
 
 ## Kontakt
 
 - E-post: [Susanne.Dahesh420@Hotmail.com](mailto:Susanne.Dahesh420@Hotmail.com)
 - GitHub: [github.com/SusanneDD](https://github.com/SusanneDD)
-
