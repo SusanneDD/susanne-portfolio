@@ -878,6 +878,16 @@ h3 {
   position: relative;
   background: #0c0f13;
 }
+.project-live-preview {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #0c0f13;
+  pointer-events: none;
+}
 .project-screen-content {
   transition: transform 3.5s cubic-bezier(0.25, 1, 0.5, 1);
   transform: translateY(0);

@@ -387,6 +387,14 @@ export default function App() {
                       <span className="scroll-hint">Rulla ↕</span>
                     </div>
                     <div className="browser-viewport">
+                      <iframe
+                        className="project-live-preview"
+                        src={p.demo}
+                        title={`Liveförhandsvisning av ${p.name}`}
+                        loading="lazy"
+                        tabIndex={-1}
+                        aria-hidden="true"
+                      />
                       <div className="project-screen-content">
                         {p.previewType === "movie" && (
                           <div className="mockup-page mockup-movie">
