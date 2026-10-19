@@ -454,6 +454,22 @@ export default function App() {
                                   <span>7.9 ★</span>
                                 </div>
                               </div>
+                              <div className="hover-browser" aria-hidden="true">
+                                <div className="hover-browser-bar">
+                                  <span className="hover-browser-dots">
+                                    <i />
+                                    <i />
+                                    <i />
+                                  </span>
+                                  <span>QUICK PREVIEW</span>
+                                </div>
+                                <iframe
+                                  src={p.demo}
+                                  title=""
+                                  tabIndex={-1}
+                                  loading="lazy"
+                                />
+                              </div>
                             </div>
                           </div>
                         )}
