@@ -89,9 +89,6 @@ export default function App() {
   const [showcaseProject, setShowcaseProject] = useState<
     (typeof projects)[number] | null
   >(null);
-  const [projectSlideIndexes, setProjectSlideIndexes] = useState<
-    Record<string, number>
-  >({});
 
   useEffect(() => {
     const updateScrollProgress = () => {
@@ -121,25 +118,6 @@ export default function App() {
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [showcaseProject]);
-
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      return;
-    }
-
-    const intervalId = window.setInterval(() => {
-      setProjectSlideIndexes((currentIndexes) =>
-        projects.reduce<Record<string, number>>((nextIndexes, project) => {
-          const currentIndex = currentIndexes[project.name] ?? 0;
-          nextIndexes[project.name] =
-            (currentIndex + 1) % project.slides.length;
-          return nextIndexes;
-        }, {}),
-      );
-    }, 4500);
-
-    return () => window.clearInterval(intervalId);
-  }, []);
 
   useEffect(() => {
     const sectionElements = navigationItems
@@ -439,53 +417,25 @@ export default function App() {
                       <span className="scroll-hint">Rulla ↕</span>
                     </div>
                     <div className="browser-viewport">
-                      <div
-                        className="project-slideshow"
-                        aria-label={`Bildspel för ${p.name}`}
-                      >
-                        {p.slides.map((slide, slideIndex) => (
+                      <div className="project-device-showcase">
+                        <span className="device-label desktop-label">
+                          DESKTOP VIEW
+                        </span>
+                        <img
+                          className="desktop-device"
+                          src={p.slides[0].src}
+                          alt={`${p.name} – ${p.slides[0].label}`}
+                        />
+                        <div className="mobile-device">
+                          <span className="mobile-camera" aria-hidden="true" />
                           <img
-                            className={
-                              (projectSlideIndexes[p.name] ?? 0) === slideIndex
-                                ? "is-active"
-                                : ""
-                            }
-                            src={slide.src}
-                            alt={`${p.name} – ${slide.label}`}
-                            key={slide.src}
+                            src={p.slides[1].src}
+                            alt={`${p.name} – ${p.slides[1].label}`}
                           />
-                        ))}
-                        <div className="slideshow-controls">
-                          <span>
-                            {(projectSlideIndexes[p.name] ?? 0) + 1} /{" "}
-                            {p.slides.length}
-                          </span>
-                          <div>
-                            {p.slides.map((slide, slideIndex) => (
-                              <button
-                                className={
-                                  (projectSlideIndexes[p.name] ?? 0) ===
-                                  slideIndex
-                                    ? "is-active"
-                                    : ""
-                                }
-                                type="button"
-                                onClick={() =>
-                                  setProjectSlideIndexes((currentIndexes) => ({
-                                    ...currentIndexes,
-                                    [p.name]: slideIndex,
-                                  }))
-                                }
-                                aria-label={`Visa ${slide.label.toLowerCase()} för ${p.name}`}
-                                aria-pressed={
-                                  (projectSlideIndexes[p.name] ?? 0) ===
-                                  slideIndex
-                                }
-                                key={slide.src}
-                              />
-                            ))}
-                          </div>
                         </div>
+                        <span className="device-label mobile-label">
+                          MOBILE
+                        </span>
                       </div>
                       <div className="project-screen-content">
                         {p.previewType === "movie" && (
