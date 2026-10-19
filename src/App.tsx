@@ -11,6 +11,7 @@ const projects = [
     previewType: "movie",
     rank: "S-RANK",
     category: "API",
+    highlight: "Dynamiskt API-flöde",
   },
   {
     name: "WeatherFinder",
@@ -22,6 +23,7 @@ const projects = [
     previewType: "weather",
     rank: "A-RANK",
     category: "API",
+    highlight: "Data som blir användbar",
   },
   {
     name: "Message Board",
@@ -33,6 +35,7 @@ const projects = [
     previewType: "message",
     rank: "A-RANK",
     category: "Interaktion",
+    highlight: "Interaktiv frontendlogik",
   },
 ];
 const skills = [
@@ -352,7 +355,7 @@ export default function App() {
               const i = projects.indexOf(p);
               return (
               <article
-                className="project-card"
+                className={`project-card project-${i + 1}`}
                 key={p.name}
                 onMouseMove={handleCardMovement}
                 onMouseLeave={resetCardMovement}
@@ -365,6 +368,14 @@ export default function App() {
               >
                 <div className={`project-visual visual-${i + 1}`}>
                   <span className="project-rank">{p.rank}</span>
+                  <div className="project-visual-meta">
+                    <span>LIVE CASE STUDY</span>
+                    <span className="visual-status">
+                      <i aria-hidden="true" /> ACTIVE
+                    </span>
+                  </div>
+                  <span className="project-orbit orbit-one" aria-hidden="true" />
+                  <span className="project-orbit orbit-two" aria-hidden="true" />
                   <div className="browser-mockup">
                     <div className="browser-bar">
                       <div className="browser-dots">
@@ -497,6 +508,7 @@ export default function App() {
                   </div>
                 </div>
                 <div className="project-body">
+                  <p className="project-highlight">{p.highlight}</p>
                   <div className="project-topline">
                     <h3>{p.name}</h3>
                     <span>0{i + 1}</span>
@@ -508,8 +520,13 @@ export default function App() {
                     ))}
                   </div>
                   <div className="project-links">
-                    <a href={p.demo} target="_blank" rel="noreferrer">
-                      Live demo ↗
+                    <a
+                      className="project-demo-link"
+                      href={p.demo}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Öppna live demo <span aria-hidden="true">↗</span>
                     </a>
                     <a
                       href="https://github.com/SusanneDD"
