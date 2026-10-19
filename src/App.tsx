@@ -12,6 +12,9 @@ const projects = [
     rank: "S-RANK",
     category: "API",
     highlight: "Dynamiskt API-flöde",
+    codeName: "CINE NEXUS",
+    missionSymbol: "◉",
+    missionFocus: "Utforska filmdata i en responsiv upplevelse.",
   },
   {
     name: "WeatherFinder",
@@ -24,6 +27,9 @@ const projects = [
     rank: "A-RANK",
     category: "API",
     highlight: "Data som blir användbar",
+    codeName: "ATMOS",
+    missionSymbol: "✦",
+    missionFocus: "Förvandla väderdata till snabba beslut.",
   },
   {
     name: "Message Board",
@@ -36,6 +42,9 @@ const projects = [
     rank: "A-RANK",
     category: "Interaktion",
     highlight: "Interaktiv frontendlogik",
+    codeName: "ECHO BOARD",
+    missionSymbol: "◌",
+    missionFocus: "Skapa samtal med tydlig frontendlogik.",
   },
 ];
 const skills = [
@@ -394,6 +403,21 @@ export default function App() {
                   </div>
                   <span className="project-orbit orbit-one" aria-hidden="true" />
                   <span className="project-orbit orbit-two" aria-hidden="true" />
+                  <div className={`mission-surface mission-${i + 1}`}>
+                    <span className="mission-number">MISSION 0{i + 1}</span>
+                    <span className="mission-symbol" aria-hidden="true">
+                      {p.missionSymbol}
+                    </span>
+                    <div className="mission-copy">
+                      <span>PROJECT CODENAME</span>
+                      <strong>{p.codeName}</strong>
+                      <p>{p.missionFocus}</p>
+                    </div>
+                    <span className="mission-ready">
+                      <i aria-hidden="true" /> READY TO LAUNCH
+                    </span>
+                    <span className="speed-lines" aria-hidden="true" />
+                  </div>
                   <div className="browser-mockup">
                     <div className="browser-bar">
                       <div className="browser-dots">
@@ -567,7 +591,7 @@ export default function App() {
                       type="button"
                       onClick={() => setShowcaseProject(p)}
                     >
-                      Visa projektet <span aria-hidden="true">⌗</span>
+                      Starta mission <span aria-hidden="true">↗</span>
                     </button>
                     <a
                       className="project-demo-link"
