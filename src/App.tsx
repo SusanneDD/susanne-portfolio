@@ -12,10 +12,6 @@ const projects = [
     rank: "S-RANK",
     category: "API",
     highlight: "Dynamiskt API-flöde",
-    slides: [
-      { src: "/movie-desktop.png", label: "Desktopvy" },
-      { src: "/movie-mobile.png", label: "Mobilvy" },
-    ],
   },
   {
     name: "WeatherFinder",
@@ -28,10 +24,6 @@ const projects = [
     rank: "A-RANK",
     category: "API",
     highlight: "Data som blir användbar",
-    slides: [
-      { src: "/weather-desktop.png", label: "Desktopvy" },
-      { src: "/weather-mobile.png", label: "Mobilvy" },
-    ],
   },
   {
     name: "Message Board",
@@ -44,10 +36,6 @@ const projects = [
     rank: "A-RANK",
     category: "Interaktion",
     highlight: "Interaktiv frontendlogik",
-    slides: [
-      { src: "/message-desktop.png", label: "Desktopvy" },
-      { src: "/message-mobile.png", label: "Mobilvy" },
-    ],
   },
 ];
 const skills = [
@@ -417,26 +405,14 @@ export default function App() {
                       <span className="scroll-hint">Rulla ↕</span>
                     </div>
                     <div className="browser-viewport">
-                      <div className="project-device-showcase">
-                        <span className="device-label desktop-label">
-                          DESKTOP VIEW
-                        </span>
-                        <img
-                          className="desktop-device"
-                          src={p.slides[0].src}
-                          alt={`${p.name} – ${p.slides[0].label}`}
-                        />
-                        <div className="mobile-device">
-                          <span className="mobile-camera" aria-hidden="true" />
-                          <img
-                            src={p.slides[1].src}
-                            alt={`${p.name} – ${p.slides[1].label}`}
-                          />
-                        </div>
-                        <span className="device-label mobile-label">
-                          MOBILE
-                        </span>
-                      </div>
+                      <iframe
+                        className="project-live-preview"
+                        src={p.demo}
+                        title={`Liveförhandsvisning av ${p.name}`}
+                        loading="lazy"
+                        tabIndex={-1}
+                        aria-hidden="true"
+                      />
                       <div className="project-screen-content">
                         {p.previewType === "movie" && (
                           <div className="mockup-page mockup-movie">
