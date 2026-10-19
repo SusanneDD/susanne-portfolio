@@ -22,14 +22,8 @@
   --glow: #8de6de;
   --max: 1180px;
 }
-.hover-browser {
-  width: 47%;
-}
 * {
   box-sizing: border-box;
-}
-.hover-browser {
-  display: none;
 }
 html {
   scroll-behavior: smooth;
