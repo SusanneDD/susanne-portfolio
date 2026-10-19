@@ -12,6 +12,10 @@ const projects = [
     rank: "S-RANK",
     category: "API",
     highlight: "Dynamiskt API-flöde",
+    slides: [
+      { src: "/movie-desktop.png", label: "Desktopvy" },
+      { src: "/movie-mobile.png", label: "Mobilvy" },
+    ],
   },
   {
     name: "WeatherFinder",
@@ -24,6 +28,10 @@ const projects = [
     rank: "A-RANK",
     category: "API",
     highlight: "Data som blir användbar",
+    slides: [
+      { src: "/weather-desktop.png", label: "Desktopvy" },
+      { src: "/weather-mobile.png", label: "Mobilvy" },
+    ],
   },
   {
     name: "Message Board",
@@ -36,6 +44,10 @@ const projects = [
     rank: "A-RANK",
     category: "Interaktion",
     highlight: "Interaktiv frontendlogik",
+    slides: [
+      { src: "/message-desktop.png", label: "Desktopvy" },
+      { src: "/message-mobile.png", label: "Mobilvy" },
+    ],
   },
 ];
 const skills = [
@@ -77,6 +89,9 @@ export default function App() {
   const [showcaseProject, setShowcaseProject] = useState<
     (typeof projects)[number] | null
   >(null);
+  const [projectSlideIndexes, setProjectSlideIndexes] = useState<
+    Record<string, number>
+  >({});
 
   useEffect(() => {
     const updateScrollProgress = () => {
@@ -106,6 +121,25 @@ export default function App() {
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [showcaseProject]);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+
+    const intervalId = window.setInterval(() => {
+      setProjectSlideIndexes((currentIndexes) =>
+        projects.reduce<Record<string, number>>((nextIndexes, project) => {
+          const currentIndex = currentIndexes[project.name] ?? 0;
+          nextIndexes[project.name] =
+            (currentIndex + 1) % project.slides.length;
+          return nextIndexes;
+        }, {}),
+      );
+    }, 4500);
+
+    return () => window.clearInterval(intervalId);
+  }, []);
 
   useEffect(() => {
     const sectionElements = navigationItems
@@ -405,14 +439,54 @@ export default function App() {
                       <span className="scroll-hint">Rulla ↕</span>
                     </div>
                     <div className="browser-viewport">
-                      <iframe
-                        className="project-live-preview"
-                        src={p.demo}
-                        title={`Liveförhandsvisning av ${p.name}`}
-                        loading="lazy"
-                        tabIndex={-1}
-                        aria-hidden="true"
-                      />
+                      <div
+                        className="project-slideshow"
+                        aria-label={`Bildspel för ${p.name}`}
+                      >
+                        {p.slides.map((slide, slideIndex) => (
+                          <img
+                            className={
+                              (projectSlideIndexes[p.name] ?? 0) === slideIndex
+                                ? "is-active"
+                                : ""
+                            }
+                            src={slide.src}
+                            alt={`${p.name} – ${slide.label}`}
+                            key={slide.src}
+                          />
+                        ))}
+                        <div className="slideshow-controls">
+                          <span>
+                            {(projectSlideIndexes[p.name] ?? 0) + 1} /{" "}
+                            {p.slides.length}
+                          </span>
+                          <div>
+                            {p.slides.map((slide, slideIndex) => (
+                              <button
+                                className={
+                                  (projectSlideIndexes[p.name] ?? 0) ===
+                                  slideIndex
+                                    ? "is-active"
+                                    : ""
+                                }
+                                type="button"
+                                onClick={() =>
+                                  setProjectSlideIndexes((currentIndexes) => ({
+                                    ...currentIndexes,
+                                    [p.name]: slideIndex,
+                                  }))
+                                }
+                                aria-label={`Visa ${slide.label.toLowerCase()} för ${p.name}`}
+                                aria-pressed={
+                                  (projectSlideIndexes[p.name] ?? 0) ===
+                                  slideIndex
+                                }
+                                key={slide.src}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      </div>
                       <div className="project-screen-content">
                         {p.previewType === "movie" && (
                           <div className="mockup-page mockup-movie">
