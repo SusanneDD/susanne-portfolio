@@ -74,6 +74,9 @@ export default function App() {
   );
   const [activeSection, setActiveSection] = useState("top");
   const [activeProjectFilter, setActiveProjectFilter] = useState("Alla");
+  const [showcaseProject, setShowcaseProject] = useState<
+    (typeof projects)[number] | null
+  >(null);
 
   useEffect(() => {
     const updateScrollProgress = () => {
@@ -88,6 +91,21 @@ export default function App() {
     window.addEventListener("scroll", updateScrollProgress, { passive: true });
     return () => window.removeEventListener("scroll", updateScrollProgress);
   }, []);
+
+  useEffect(() => {
+    if (!showcaseProject) {
+      return;
+    }
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setShowcaseProject(null);
+      }
+    };
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [showcaseProject]);
 
   useEffect(() => {
     const sectionElements = navigationItems
@@ -528,6 +546,13 @@ export default function App() {
                     ))}
                   </div>
                   <div className="project-links">
+                    <button
+                      className="project-preview-button"
+                      type="button"
+                      onClick={() => setShowcaseProject(p)}
+                    >
+                      Visa projektet <span aria-hidden="true">⌗</span>
+                    </button>
                     <a
                       className="project-demo-link"
                       href={p.demo}
@@ -625,6 +650,49 @@ export default function App() {
           </div>
         </section>
       </main>
+      {showcaseProject && (
+        <div
+          className="project-showcase-backdrop"
+          role="presentation"
+          onMouseDown={() => setShowcaseProject(null)}
+        >
+          <section
+            className="project-showcase"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="project-showcase-title"
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <header className="showcase-header">
+              <div>
+                <span className="showcase-label">LIVE PROJECT VIEWER</span>
+                <h2 id="project-showcase-title">{showcaseProject.name}</h2>
+              </div>
+              <div className="showcase-actions">
+                <a
+                  href={showcaseProject.demo}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Öppna i ny flik ↗
+                </a>
+                <button
+                  type="button"
+                  onClick={() => setShowcaseProject(null)}
+                  aria-label="Stäng projektvisaren"
+                >
+                  ×
+                </button>
+              </div>
+            </header>
+            <iframe
+              className="showcase-frame"
+              src={showcaseProject.demo}
+              title={`${showcaseProject.name} i helskärmsvisaren`}
+            />
+          </section>
+        </div>
+      )}
       <footer>
         <span>© 2026 Susanne Dahesh</span>
         <a href="#top">Till toppen ↑</a>

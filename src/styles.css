@@ -1131,11 +1131,110 @@ h3 {
   font-size: 13px;
   font-weight: 700;
 }
+.project-preview-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.project-preview-button span {
+  color: var(--accent-hot);
+  font-size: 17px;
+  transition: transform 0.2s ease;
+}
+.project-preview-button:hover span {
+  transform: rotate(90deg);
+}
 .project-demo-link {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   color: var(--text);
+}
+.project-showcase-backdrop {
+  position: fixed;
+  z-index: 50;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(4, 7, 10, 0.86);
+  backdrop-filter: blur(12px);
+  animation: showcase-enter 0.2s ease-out;
+}
+.project-showcase {
+  width: min(1180px, 100%);
+  height: min(840px, calc(100vh - 48px));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(141, 230, 222, 0.45);
+  border-radius: 16px;
+  background: #0c0f13;
+  box-shadow: 0 24px 90px rgba(0, 0, 0, 0.65), 0 0 48px rgba(141, 230, 222, 0.13);
+}
+.showcase-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(90deg, rgba(141, 230, 222, 0.11), rgba(255, 92, 138, 0.07));
+}
+.showcase-label {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--glow);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+}
+.showcase-header h2 {
+  font-size: 20px;
+}
+.showcase-header h2::after {
+  display: none;
+}
+.showcase-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+.showcase-actions a:hover {
+  color: var(--glow);
+}
+.showcase-actions button {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text);
+  font-size: 25px;
+  line-height: 1;
+  cursor: pointer;
+}
+.showcase-actions button:hover {
+  border-color: var(--accent-hot);
+  color: var(--accent-hot);
+}
+.showcase-frame {
+  width: 100%;
+  min-height: 0;
+  flex: 1;
+  border: 0;
+  background: #fff;
 }
 .project-demo-link span {
   color: var(--glow);
@@ -1257,6 +1356,12 @@ footer {
         transform: rotate(90deg) scale(1.35);
         opacity: 0.45;
       }
+      @keyframes showcase-enter {
+        from {
+          opacity: 0;
+          transform: scale(0.98);
+        }
+      }
     }
   }
 }
@@ -1295,6 +1400,15 @@ footer {
   .project-card.project-2,
   .project-card.project-3 {
     grid-column: auto;
+  }
+  .project-showcase-backdrop {
+    padding: 12px;
+  }
+  .project-showcase {
+    height: calc(100vh - 24px);
+  }
+  .showcase-header {
+    padding: 12px;
   }
   .project-card.project-3 {
     display: block;
